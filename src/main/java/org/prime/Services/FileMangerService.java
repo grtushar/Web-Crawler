@@ -1,7 +1,17 @@
 package org.prime.Services;
 
+import org.prime.DTOs.pageDTO;
+
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Created by Golam Rahman Tushar on 5/29/2017.
@@ -44,5 +54,33 @@ public final class FileMangerService {
         writer.write(content);
         writer.flush();
         writer.close();
+    }
+
+    public static ArrayList<pageDTO> read(String sourceFile) throws FileNotFoundException {
+        ArrayList<pageDTO> ret = new ArrayList<pageDTO>();
+        JSONParser parser = new JSONParser();
+        JSONArray arr = null;
+
+        try {
+            arr = (JSONArray) parser.parse(new FileReader(sourceFile));
+        } catch (IOException ex) {
+            System.out.println(ex);
+//            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            System.out.println(ex);
+//            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for(Object ob : arr) {
+            JSONObject jsonObject = (JSONObject) ob;
+
+            String url = (String) jsonObject.get("url");
+            String title = (String) jsonObject.get("title");
+            HashMap<String, ArrayList<String>> content = (HashMap<String, ArrayList<String>>) jsonObject.get("content");
+
+            ret.add(new pageDTO(url, title, content));
+        }
+
+        return ret;
     }
 }
