@@ -29,10 +29,10 @@ public class CrawlerService {
         HashMap<String, ArrayList<String>> tag_text = new HashMap<String, ArrayList<String>>();
 
         for (Element element : elements) {
-            String tagName = element.tagName();
+            String tagName = Utility.getRidOfSpecialChar(element.tagName());
             if( Utility.isValidTag(tagName)) {
                 String textValue = Utility.removeNonPrintableChars(element.ownText()).trim();
-                textValue = textValue.replace("\"", "\'");
+                textValue = Utility.getRidOfSpecialChar(textValue);
                 if(!textValue.equals("")) {
                     if(tag_text.containsKey(tagName)) {
                         tag_text.get(tagName).add(textValue);
@@ -70,8 +70,9 @@ public class CrawlerService {
         content = Utility.removeNonPrintableChars(content);
         content = Utility.removeSpaces(content);
 
+        String titleName = Utility.getRidOfSpecialChar(doc.title());
         ret += "{ \"url\" : \"" + url + "\",\n";
-        ret += " \"title\" : \"" + doc.title() + "\",\n";
+        ret += " \"title\" : \"" + titleName + "\",\n";
         ret += "\"content\" : " + content;
         ret += "\n}";
         ret = ret.trim();

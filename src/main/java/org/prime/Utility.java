@@ -1,5 +1,7 @@
 package org.prime;
 
+import org.json.simple.JSONObject;
+
 /**
  * Created by Golam Rahman Tushar on 5/29/2017.
  */
@@ -46,5 +48,9 @@ public final class Utility {
         result = result.replaceAll("\"", "&quot;");
         result = result.replaceAll("'", "&apos;");
         return result;
+    }
+
+    public static String getRidOfSpecialChar(String param) {
+       return JSONObject.escape(param);
     }
 }
